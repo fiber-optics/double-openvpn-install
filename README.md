@@ -38,6 +38,7 @@ cd ~/ && python -m SimpleHTTPServer 7999 &
 *And then on Server01:*
 ```
 wget http://Server02_IP:7999/upstream.conf -O /etc/openvpn/upstream.conf
+wget http://Server02_IP::7999/upstream-route.sh -O /etc/openvpn/upstream-route.sh
 
 ```
 And turn off simple web server on Server02
