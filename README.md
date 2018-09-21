@@ -38,12 +38,24 @@ cd ~/ && python -m SimpleHTTPServer 7999 &
 *And then on Server01:*
 ```
 wget http://Server02_IP:7999/upstream.conf -O /etc/openvpn/upstream.conf
-```
-And turn off simple web server on Server02!
-then delete SNAT-recod
-iptables -t nat -D POSTROUTING 1
 
-# iptables -L -nv -t nat
+```
+And turn off simple web server on Server02
+
+```
+kill -9 `pidof python`
+```
+
+then delete SNAT-recod
+
+```
+iptables -t nat -D POSTROUTING 1
+```
+
+check iptables rules, it's looks like this:
+
+```
+iptables -L -nv -t nat
 Chain PREROUTING (policy ACCEPT 0 packets, 0 bytes)
  pkts bytes target     prot opt in     out     source               destination
 
@@ -57,9 +69,11 @@ Chain POSTROUTING (policy ACCEPT 0 packets, 0 bytes)
  pkts bytes target     prot opt in     out     source               destination
     0     0 MASQUERADE  all  --  *      eth0    10.8.0.0/24         !10.8.0.0/24
     0     0 MASQUERADE  all  --  *      tap-upstream  0.0.0.0/0            0.0.0.0/0
-
+```
 and
-# nohup openvpn --config /etc/openvpn/upstream.conf &
+```
+nohup openvpn --config /etc/openvpn/upstream.conf &
+```
 --------------------------------------------------------------------------------
 
 ## Triple (Quad an so more) VPN
