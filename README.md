@@ -28,6 +28,7 @@ kill -9 `pidof python`
 ```
 wget https://git.io/v51Ja -O second-server-install.sh && bash second-server-install.sh
 ```
+watchout on interface iptables rules
 
 Upstream config for Server01 is available at ~/upstream.conf:
 ```
@@ -39,7 +40,26 @@ cd ~/ && python -m SimpleHTTPServer 7999 &
 wget http://Server02_IP:7999/upstream.conf -O /etc/openvpn/upstream.conf
 ```
 And turn off simple web server on Server02!
+then delete SNAT-recod
+iptables -t nat -D POSTROUTING 1
 
+# iptables -L -nv -t nat
+Chain PREROUTING (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination
+
+Chain INPUT (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination
+
+Chain OUTPUT (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination
+
+Chain POSTROUTING (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination
+    0     0 MASQUERADE  all  --  *      eth0    10.8.0.0/24         !10.8.0.0/24
+    0     0 MASQUERADE  all  --  *      tap-upstream  0.0.0.0/0            0.0.0.0/0
+
+and
+# nohup openvpn --config /etc/openvpn/upstream.conf &
 --------------------------------------------------------------------------------
 
 ## Triple (Quad an so more) VPN
