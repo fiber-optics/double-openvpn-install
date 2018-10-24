@@ -30,6 +30,12 @@ wget https://git.io/v51Ja -O second-server-install.sh && bash second-server-inst
 ```
 watchout on interface iptables rules
 
+add to iptables:
+```
+-A POSTROUTING -s 10.10.0.0/24 ! -d 10.10.0.0/24 -o interface_name -j MASQUERADE
+-A POSTROUTING -s 10.0.2.0/24 -j SNAT --to-source ip_server2
+```
+
 Upstream config for Server01 is available at ~/upstream.conf:
 ```
 cd ~/ && python -m SimpleHTTPServer 7999 &
